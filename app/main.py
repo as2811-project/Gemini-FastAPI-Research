@@ -1,6 +1,6 @@
 import os
 import json
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, status
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -87,6 +87,15 @@ def generate_final_report(topic: str, deepdive_topic: str, total_context: list, 
     )
     return response.text
 
+class HealthCheck(BaseModel):
+    message: str = "OK"
+@app.get("/health", status_code=status.HTTP_200_OK, response_model=HealthCheck)
+async def health() -> HealthCheck:
+    """
+    Health Check endpoint
+    :return: 200
+    """
+    return HealthCheck(status="OK")
 @app.post("/research")
 async def generate_report_sse(report_request: ReportRequest):
     """
