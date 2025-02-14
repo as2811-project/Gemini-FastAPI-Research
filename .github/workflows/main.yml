@@ -1,7 +1,7 @@
 name: ECR Deploy
 on:
   push:
-    branches: ["main"]
+    paths: app/**.py
 jobs:
   ECR-Push:
     name: Build Docker Image
