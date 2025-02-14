@@ -40,9 +40,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
-            docker rmi -f $(docker images -q)
-            docker pull $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG
-            docker run $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG
+            CONTAINER_NAME=${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${ECR_REPOSITORY}:${IMAGE_TAG}
+            if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+              docker stop $CONTAINER_NAME || true
+              docker rm -f $CONTAINER_NAME || true
+            fi
+            docker pull $CONTAINER_NAME
+            docker run $CONTAINER_NAME
 
       
 
