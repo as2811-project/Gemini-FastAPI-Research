@@ -112,7 +112,7 @@ async def health() -> HealthCheck:
 @app.post("/research")
 async def generate_report_sse(report_request: ReportRequest):
     """
-    SSE endpoint that streams citations as they are retrieved.
+    SSE endpoint that streams citations as they are retrieved. This is to render a nice cascading loading animation on the frontend
     After processing all queries, the final report is sent as the last event.
     """
     def event_generator():
