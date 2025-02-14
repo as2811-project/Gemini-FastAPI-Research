@@ -14,7 +14,7 @@ provider "aws" {
 
 resource "aws_security_group" "ssh_access" {
   name = "fastapi-ec2-sg"
-  description = "adds appropriate ssh permission"
+  description = "security group that allows ssh and all egress traffic"
   ingress {
     cidr_blocks = ["0.0.0.0/0"]
     from_port = 22
@@ -36,7 +36,7 @@ resource "aws_security_group" "ssh_access" {
 }
 
 resource "aws_instance" "api-server" {
-  ami           = "ami-0c71c4b6e6896eda5"
+  ami           = "ami-0b0a3a2350a9877be"
   instance_type = "t2.micro"
   tags = {
     Name = var.instance_name
