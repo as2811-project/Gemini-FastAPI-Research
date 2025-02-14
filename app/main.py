@@ -61,6 +61,11 @@ def generate_queries(topic: str, width: int, depth: int, deepdive_topic: str):
     return json.loads(response.text)
 
 def generate_context(search_query: str):
+    """
+
+    :param search_query: Uses the search query generated in the previous step to generate a grounded response
+    :return: response and metadata (references)
+    """
     response = client.models.generate_content(
         model="gemini-2.0-flash",
         contents=search_query,
@@ -71,6 +76,13 @@ def generate_context(search_query: str):
     return response.text, response.candidates[0].grounding_metadata.grounding_chunks
 
 def generate_final_report(topic: str, deepdive_topic: str, total_context: list, citations: list):
+    """
+    :param topic: Research Topic
+    :param deepdive_topic: Topic that the user wants to dive deeper into
+    :param total_context: Complete context generated from previous step(s)
+    :param citations: Citations from previous step(s)
+    :return:
+    """
     sys_instruct = (
         f"You are an expert analyst in the topic: {topic}. You've been given a lot of context (which you produced earlier) "
         f"supporting the user's research on said topic. With this information, generate a detailed (1000 words) report as instructed. "
@@ -96,6 +108,7 @@ async def health() -> HealthCheck:
     :return: 200
     """
     return HealthCheck(status="OK")
+
 @app.post("/research")
 async def generate_report_sse(report_request: ReportRequest):
     """
